@@ -1,0 +1,60 @@
+services:
+  pr2_wordpress:
+    image: wordpress:6.9.4-php8.5-apache
+    container_name: wp${PROYECTO_ID}
+    ports:
+      - "8080:80"
+    depends_on:
+      - pr2_bd_wp
+    environment:
+      WORDPRESS_DB_HOST: pr2_bd_wp
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+#      WORDPRESS_TABLE_PREFIX: wp_ivan
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://wordpress.ivan:8080');
+        define('WP_SITEURL', 'http://wordpress.ivan:8080');
+    extra_hosts:
+      - "wordpress.ivan:host-gateway"
+    volumes:
+      - wp_content:/var/www/html/wp-content   # Directorio de Wordpress
+      - ./vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+    restart: always
+    networks:
+      - wp_network
+
+  pr2_bd_wp:
+    image: mariadb:11.4
+    container_name: db${PROYECTO_ID}
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - bd_datos:/var/lib/mysql   # Directorio de los archivos de la BD
+    restart: always
+    networks:
+      - wp_network
+
+  pr2_phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: pma_${PROYECTO_ID}
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: pr2_bd_wp   # Servicio de la BD
+    depends_on:
+      - pr2_bd_wp
+    restart: always
+    networks:
+      - wp_network
+
+volumes:
+  bd_datos:
+  wp_content:
+
+networks:
+  wp_network:
+    driver: bridge
