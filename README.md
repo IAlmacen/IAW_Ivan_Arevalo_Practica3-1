@@ -181,3 +181,28 @@ Para garantizar que el servidor Apache dentro del contenedor enlace correctament
 * **Feeds RSS Externos (Barra Lateral / Sidebar)**:
   1. **Velocidad Cuchara**: `https://www.velocidadcuchara.com/feed/`
   2. **Directo al Paladar**: `https://www.directoalpaladar.com/feed`
+
+
+  ---
+
+### 2.7 Localización e Integración de Mapas
+
+Para la página de **Contacto**, se integró un mapa interactivo mediante **Google Maps** incrustando el código `<iframe>` de la ubicación del restaurante en el centro de Valencia (Plaza del Ayuntamiento / Ciutat Vella):
+
+* **Ubicación configurada:** Centro de Valencia (46002 Valencia, España).
+* **Método de integración:** Bloque HTML personalizado / Elementor HTML con marco responsivo (`width="100%" height="450"`).
+
+---
+
+### 2.8 Estrategia de Copias de Seguridad y Migración (UpdraftPlus)
+
+#### 2.8.1 Copia de Seguridad Completa
+1. **Instalación de Plugin:** Se instaló y activó el plugin **UpdraftPlus Backup/Restore**.
+2. **Respaldo en la Nube:** Se vinculó con **Google Drive** mediante autenticación OAuth2 y se ejecutó un respaldo completo manual incluyendo:
+   * Base de datos MySQL/MariaDB.
+   * Archivos de WordPress (`plugins`, `themes`, `uploads` y contenido de `wp-content`).
+3. **Descarga de Artefactos:** Se descargaron localmente los ficheros comprimidos `.zip` generados por el backup.
+
+#### 2.8.2 Restauración y Exportación
+* **Restauración en Entornos:** Se reinstaló UpdraftPlus en el entorno secundario (Windows / servidor alternativo) e importaron los archivos `.zip` para ejecutar la restauración completa del sitio.
+* **Exportación XML:** Se generó una copia ligera de contenidos desde **Herramientas → Exportar** seleccionando *Todo el contenido* para obtener el archivo de migración `.xml` compatible con WordPress.com.
